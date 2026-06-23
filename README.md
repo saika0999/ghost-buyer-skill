@@ -4,6 +4,15 @@ Ghost Buyer is an iterative Codex skill for Taobao/Tmall shopping research: it b
 
 This skill is designed for Chinese marketplace research where details such as exact SKU, material, seller trust, after-sales terms, negative reviews, follow-up reviews, and `问大家` can materially change the recommendation.
 
+## Use, Star, And Feedback
+
+Ghost Buyer is open source under the MIT License. You can use it, copy it, modify it, and share improved versions under the license terms.
+
+If this skill is useful to you, please star the repository so more people can find it. Feedback is welcome:
+
+- Open an issue for bugs, broken setup steps, Taobao/Tmall workflow problems, or feature requests.
+- Start a discussion for shopping research ideas, report examples, category-specific improvements, or general questions.
+
 ## What It Does
 
 - Aligns with the user's requirements before browsing.
