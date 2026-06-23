@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ghost Buyer"
+  short_description: "Careful Taobao/Tmall buying reports"
+  default_prompt: "Use $ghost-buyer to shop Taobao/Tmall, verify SKU-level constraints, and produce iterative Markdown and HTML buying reports until I ask to finalize."

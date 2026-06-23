@@ -1,0 +1,17 @@
+.DS_Store
+.venv/
+__pycache__/
+*.pyc
+
+# Local shopping/browser state. Never publish these.
+work/
+reports/
+output/
+tmp/
+dist/
+
+# Secrets and local config.
+.env
+.env.*
+*.log
+

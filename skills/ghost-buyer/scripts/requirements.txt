@@ -1,0 +1,7 @@
+browser-use
+crawl4ai
+playwright
+beautifulsoup4
+lxml
+pydantic>=2
+rich

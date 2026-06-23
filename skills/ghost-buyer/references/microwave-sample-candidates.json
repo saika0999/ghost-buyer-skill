@@ -1,0 +1,222 @@
+[
+  {
+    "id": "sample-pass",
+    "title": "美的 20L 微波炉 白色 800W",
+    "brand": "美的",
+    "model": "M1-sample",
+    "platform": "jd",
+    "store_name": "美的京东自营旗舰店",
+    "store_type": "self_operated",
+    "url": "https://item.jd.com/sample-pass.html",
+    "purchase_platform_verified": true,
+    "purchase_note": "Sample JD self-operated listing with visible product specs and review counts.",
+    "selected_sku": {
+      "label": "20L 白色 800W 标准版",
+      "model": "M1-sample",
+      "color": "白色",
+      "price_cny": 399,
+      "current": true,
+      "verified": true
+    },
+    "store_trust": {
+      "grade": "A",
+      "signals": ["京东自营", "旗舰店"],
+      "rationale": "Sample self-operated flagship listing."
+    },
+    "price_cny": 399,
+    "sales_text": "10万+评价",
+    "review_count": 100000,
+    "bad_review_count": 300,
+    "bad_review_rate": 0.003,
+    "after_sales": {
+      "seven_day_no_reason": true,
+      "return_freight_support": true,
+      "warranty_text": "1 年质保",
+      "invoice_support": true,
+      "price_protection": true,
+      "installation_included": null,
+      "notes": "Sample visible after-sales terms."
+    },
+    "reviews": {
+      "negative_review_checked": true,
+      "follow_up_review_checked": true,
+      "qna_checked": true,
+      "severe_negative_themes": [],
+      "medium_negative_themes": [],
+      "mild_negative_themes": ["isolated delivery delay"],
+      "summary": "No recurring severe product or seller-risk theme found."
+    },
+    "specs": {
+      "power_w": 800,
+      "height_cm": 25.9,
+      "color": "白色",
+      "capacity_l": 20,
+      "dimensions_text": "440 x 358 x 259 mm"
+    },
+    "evidence": [
+      {
+        "field": "price_cny",
+        "value": "399 CNY visible price",
+        "source_url": "https://item.jd.com/sample-pass.html",
+        "observed_at": "2026-06-18T00:00:00Z",
+        "confidence": "high"
+      },
+      {
+        "field": "power_w",
+        "value": "800W",
+        "source_url": "https://item.jd.com/sample-pass.html",
+        "observed_at": "2026-06-18T00:00:00Z",
+        "confidence": "high"
+      },
+      {
+        "field": "height_cm",
+        "value": "259 mm",
+        "source_url": "https://item.jd.com/sample-pass.html",
+        "observed_at": "2026-06-18T00:00:00Z",
+        "confidence": "high"
+      },
+      {
+        "field": "color",
+        "value": "white SKU selected",
+        "source_url": "https://item.jd.com/sample-pass.html",
+        "observed_at": "2026-06-18T00:00:00Z",
+        "confidence": "high"
+      }
+    ]
+  },
+  {
+    "id": "sample-fail-height",
+    "title": "格兰仕 23L 微波炉 白色 900W",
+    "brand": "格兰仕",
+    "model": "G-sample",
+    "platform": "tmall",
+    "store_name": "格兰仕旗舰店",
+    "store_type": "flagship",
+    "url": "https://detail.tmall.com/item.htm?id=sample",
+    "purchase_platform_verified": true,
+    "selected_sku": {
+      "label": "23L 白色 900W 标准版",
+      "model": "G-sample",
+      "color": "白色",
+      "price_cny": 499,
+      "current": true,
+      "verified": true
+    },
+    "store_trust": {
+      "grade": "A",
+      "signals": ["天猫", "旗舰店"],
+      "rationale": "Sample Tmall flagship listing."
+    },
+    "price_cny": 499,
+    "review_count": 50000,
+    "bad_review_rate": 0.004,
+    "after_sales": {
+      "seven_day_no_reason": true,
+      "return_freight_support": true,
+      "warranty_text": "1 年质保",
+      "invoice_support": true,
+      "price_protection": false,
+      "installation_included": null,
+      "notes": "Sample visible after-sales terms."
+    },
+    "reviews": {
+      "negative_review_checked": true,
+      "follow_up_review_checked": true,
+      "qna_checked": true,
+      "severe_negative_themes": [],
+      "medium_negative_themes": [],
+      "mild_negative_themes": [],
+      "summary": "Sample review probe completed; product still fails height."
+    },
+    "specs": {
+      "power_w": 900,
+      "height_cm": 28.1,
+      "color": "白色"
+    },
+    "evidence": []
+  },
+  {
+    "id": "sample-taobao-needs-review",
+    "title": "美的 20L 微波炉 白色 800W 淘宝官方样例",
+    "brand": "美的",
+    "model": "M2H1-sample",
+    "platform": "tmall",
+    "store_name": "美的官方旗舰店",
+    "store_type": "flagship",
+    "url": "https://detail.tmall.com/item.htm?id=sample-needs-review",
+    "purchase_platform_verified": true,
+    "purchase_note": "Sample Tmall listing with product evidence but missing review probe.",
+    "selected_sku": {
+      "label": "20L 白色 800W 当前 SKU",
+      "model": "M2H1-sample",
+      "color": "白色",
+      "price_cny": 429,
+      "current": true,
+      "verified": true
+    },
+    "store_trust": {
+      "grade": "A",
+      "signals": ["天猫", "官方旗舰店"],
+      "rationale": "Sample official flagship listing."
+    },
+    "price_cny": 429,
+    "sales_text": "2万+付款",
+    "review_count": 20000,
+    "bad_review_rate": 0.0035,
+    "after_sales": {
+      "seven_day_no_reason": true,
+      "return_freight_support": true,
+      "warranty_text": "整机 1 年质保",
+      "invoice_support": true,
+      "price_protection": true,
+      "installation_included": null,
+      "notes": "Visible protection terms captured."
+    },
+    "reviews": {
+      "negative_review_checked": false,
+      "follow_up_review_checked": false,
+      "qna_checked": false,
+      "severe_negative_themes": [],
+      "medium_negative_themes": [],
+      "mild_negative_themes": [],
+      "summary": "Review tabs were not inspected in this sample."
+    },
+    "specs": {
+      "power_w": 800,
+      "height_cm": 26.4,
+      "color": "白色",
+      "capacity_l": 20,
+      "dimensions_text": "451 x 343 x 264 mm"
+    },
+    "evidence": [
+      {
+        "field": "price_cny",
+        "value": "429 CNY visible price",
+        "source_url": "https://detail.tmall.com/item.htm?id=sample-needs-review",
+        "observed_at": "2026-06-18T00:00:00Z",
+        "confidence": "high"
+      },
+      {
+        "field": "power_w",
+        "value": "800W",
+        "source_url": "https://detail.tmall.com/item.htm?id=sample-needs-review",
+        "observed_at": "2026-06-18T00:00:00Z",
+        "confidence": "high"
+      },
+      {
+        "field": "height_cm",
+        "value": "264 mm",
+        "source_url": "https://detail.tmall.com/item.htm?id=sample-needs-review",
+        "observed_at": "2026-06-18T00:00:00Z",
+        "confidence": "high"
+      },
+      {
+        "field": "color",
+        "value": "white selected SKU",
+        "source_url": "https://detail.tmall.com/item.htm?id=sample-needs-review",
+        "observed_at": "2026-06-18T00:00:00Z",
+        "confidence": "high"
+      }
+    ]
+  }
+]

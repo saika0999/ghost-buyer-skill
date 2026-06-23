@@ -1,0 +1,31 @@
+{
+  "task_name": "microwave-under-500-low-height",
+  "category": "microwave oven",
+  "allowed_platforms": ["taobao", "tmall", "jd"],
+  "store_requirements": ["official", "flagship", "self_operated"],
+  "brand_policy": {
+    "mode": "allow_list",
+    "brands": ["Midea", "美的", "Galanz", "格兰仕", "Panasonic", "松下", "Haier", "海尔", "Toshiba", "东芝"]
+  },
+  "hard_constraints": {
+    "price_cny": {"max": 500},
+    "power_w": {"min": 800},
+    "height_cm": {"max": 27},
+    "color": {"disallow": ["black", "黑色"]}
+  },
+  "soft_preferences": {
+    "high_sales": true,
+    "low_bad_reviews": true,
+    "major_brand": true
+  },
+  "taobao_policy": {
+    "minimum_store_trust_grade": "B",
+    "require_selected_sku_evidence": true,
+    "require_after_sales_evidence": true,
+    "require_review_probe": true
+  },
+  "notes": [
+    "Prefer Taobao/Tmall or JD flagship/official stores.",
+    "Sales and bad-review signals are time-sensitive and must be rechecked at recommendation time."
+  ]
+}
