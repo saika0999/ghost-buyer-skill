@@ -81,6 +81,9 @@ Use this schema for shopping-task data passed between the agent, scripts, and fu
   "store_name": "Midea JD self-operated flagship store",
   "store_type": "self_operated",
   "url": "https://item.jd.com/example.html",
+  "canonical_url": "https://item.jd.com/example.html",
+  "source_url": "https://search.jd.com/Search?keyword=example",
+  "review_probe_url": "https://item.jd.com/example.html#comment",
   "image_url": "https://example.com/product.jpg",
   "screenshot_path": "work/shopping-captures/jd-123456.png",
   "source_platform": "jd",
@@ -154,6 +157,8 @@ Use this schema for shopping-task data passed between the agent, scripts, and fu
 - Do not infer color from a promotional image unless a product option or spec confirms it.
 - Use `selected_sku` for the currently selected buyable option. Title-level claims are not enough for Taobao/Tmall recommendations.
 - Treat `url` and `image_url`/`screenshot_path` as product identity fields. They should be captured for every top candidate and rendered first in each candidate section, before pros, cons, scores, or evidence details.
+- For Taobao/Tmall candidates, preserve URL roles instead of overwriting them: use `url` for the link the user should open to buy, `canonical_url` for a cleaned stable item identity when useful, `source_url` for the original search-result or marketplace URL used to collect evidence, and `review_probe_url` for the exact URL used to inspect reviews/follow-up reviews/`问大家`.
+- Do not replace a Taobao/Tmall `source_url` with a simplified `detail.tmall.com/item.htm?id=...` or `item.taobao.com/item.htm?id=...` URL before review probing. Simplified item URLs can hide review modules. If review markers are missing on a simplified URL, retry with `source_url` or `review_probe_url` before recording review evidence as unavailable.
 - For multi-material listings, record the exact `selected_sku.label` and material evidence for that SKU. Do not reject a whole listing or brand because another SKU in the same link uses an unwanted material.
 - Use `store_trust.grade` with A/B/C/D/unknown. Derive it from visible store type, platform badges, store name, and authenticity signals; do not infer A-grade trust from brand words in the product title.
 - Use `after_sales` for visible purchase protections and service terms. Use `null` when a term is not relevant, and omit or leave `unknown` only when it was not checked.

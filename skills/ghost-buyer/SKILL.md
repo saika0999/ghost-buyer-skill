@@ -221,6 +221,8 @@ For Taobao/Tmall tasks, treat environment setup and manual login as a required f
 
 4. Extract candidates with evidence:
    - Capture product URL, platform, store name/type, title, selected SKU, price, specs, sales/review signals, after-sales terms, and timestamp.
+   - For Taobao/Tmall, preserve the original search-result `href` or full marketplace URL before any URL cleanup. Store it as `source_url`, and store the URL actually used for review probing as `review_probe_url` when it differs from the purchase/canonical URL.
+   - Do not canonicalize Taobao/Tmall URLs before SKU, parameter, review, follow-up review, or `问大家` collection. Simplified `detail.tmall.com/item.htm?id=...` or `item.taobao.com/item.htm?id=...` links can render lightweight purchase pages that hide `用户评价`, `追评`, `问大家`, 参数信息, or 图文详情 modules.
    - Preserve source URLs or screenshots for claims that affect ranking.
    - For Chinese marketplaces, keep original Chinese fields when useful, such as `官方旗舰店`, `品牌直营`, `退货宝`, `差评`, `追评`, `问大家`, and `付款人数`.
 
@@ -411,6 +413,8 @@ For Taobao/Tmall top candidates, run a separate review probe after the detail-pa
 
 Minimum review probe for the tentative winner and serious backups:
 
+- Prefer the original Taobao/Tmall search-result URL or `review_probe_url` for the review probe. Use the canonical item URL only as a purchase identity link, not as the only review evidence route.
+- If `用户评价`, `查看全部评价`, `追评`, or `问大家` is missing on a simplified item URL, retry the same item with `source_url` or `review_probe_url` before marking review evidence unavailable.
 - Open or inspect the full review area/page, not only the detail-page summary cards.
 - Try to inspect bad/neutral reviews, follow-up reviews (`追评`), and `问大家`.
 - Capture visible text or screenshots into files whose names make the scope obvious, such as `*-review-probe.txt`, `*-negative-review.txt`, `*-follow-up.txt`, or `*-qna.txt`.

@@ -121,6 +121,35 @@ def platform_is_taobao(candidate: Dict[str, Any]) -> bool:
     return str(candidate.get("platform") or "").lower() in TAOBAO_PLATFORMS
 
 
+def taobao_url_has_market_context(url: Any) -> bool:
+    text = str(url or "").lower()
+    return any(marker in text for marker in ("spm=", "utparam=", "xxc=", "ns=", "mi_id=", "abbucket=", "from="))
+
+
+def taobao_url_looks_simplified(url: Any) -> bool:
+    text = str(url or "").lower()
+    if "id=" not in text:
+        return False
+    if not any(host in text for host in ("detail.tmall.com/item", "item.taobao.com/item")):
+        return False
+    return not taobao_url_has_market_context(text)
+
+
+def candidate_review_probe_url(candidate: Dict[str, Any]) -> Any:
+    reviews = candidate.get("reviews") if isinstance(candidate.get("reviews"), dict) else {}
+    return (
+        candidate.get("review_probe_url")
+        or reviews.get("review_probe_url")
+        or candidate.get("source_url")
+        or candidate.get("url")
+    )
+
+
+def candidate_explicit_review_probe_url(candidate: Dict[str, Any]) -> Any:
+    reviews = candidate.get("reviews") if isinstance(candidate.get("reviews"), dict) else {}
+    return candidate.get("review_probe_url") or reviews.get("review_probe_url")
+
+
 def normalized_candidate(candidate: Dict[str, Any]) -> Dict[str, Any]:
     specs = candidate.setdefault("specs", {})
     for key in ("price_cny", "review_count", "bad_review_count", "bad_review_rate"):
@@ -302,6 +331,42 @@ def check_purchase_evidence(candidate: Dict[str, Any]) -> List[CheckResult]:
                 "purchase channel verification is missing",
             )
         )
+    if platform_is_taobao(candidate):
+        source_url = candidate.get("source_url")
+        review_probe_url = candidate_explicit_review_probe_url(candidate)
+        url = candidate.get("url")
+        if review_probe_url or source_url:
+            results.append(
+                CheckResult(
+                    "review_probe_url",
+                    "pass",
+                    "original source/review probe URL is retained for Taobao/Tmall review checks",
+                )
+            )
+        elif taobao_url_has_market_context(url):
+            results.append(
+                CheckResult(
+                    "review_probe_url",
+                    "pass",
+                    "purchase URL appears to retain Taobao/Tmall marketplace context for review probing",
+                )
+            )
+        elif taobao_url_looks_simplified(url):
+            results.append(
+                CheckResult(
+                    "review_probe_url",
+                    "needs_review",
+                    "only a simplified Taobao/Tmall item URL is captured; preserve or retry the original search-result URL because simplified pages can hide reviews/Q&A",
+                )
+            )
+        else:
+            results.append(
+                CheckResult(
+                    "review_probe_url",
+                    "needs_review",
+                    "Taobao/Tmall source or review probe URL is missing; preserve the original marketplace URL when available",
+                )
+            )
     return results
 
 
@@ -359,7 +424,14 @@ def check_review_risk(criteria: Dict[str, Any], candidate: Dict[str, Any]) -> Li
     if not required:
         return []
     if not isinstance(reviews, dict) or not reviews:
-        return [CheckResult("reviews", "needs_review", "negative/follow-up/Q&A review probe is missing")]
+        message = "negative/follow-up/Q&A review probe is missing"
+        if taobao_url_looks_simplified(candidate.get("url")) and (
+            candidate.get("source_url") or candidate_explicit_review_probe_url(candidate)
+        ):
+            message += "; retry with source_url/review_probe_url before marking reviews unavailable"
+        elif taobao_url_looks_simplified(candidate.get("url")):
+            message += "; only a simplified Taobao/Tmall item URL is available, so the original source URL must be preserved and retried"
+        return [CheckResult("reviews", "needs_review", message)]
 
     severe = reviews.get("severe_negative_themes") or []
     if severe:
@@ -375,7 +447,12 @@ def check_review_risk(criteria: Dict[str, Any], candidate: Dict[str, Any]) -> Li
         if parse_bool(reviews.get(key)) is not True:
             missing.append(label)
     if missing:
-        results.append(CheckResult("reviews", "needs_review", "missing review checks: " + ", ".join(missing)))
+        message = "missing review checks: " + ", ".join(missing)
+        if taobao_url_looks_simplified(candidate.get("url")) and (
+            candidate.get("source_url") or candidate_explicit_review_probe_url(candidate)
+        ):
+            message += "; retry missing areas with source_url/review_probe_url"
+        results.append(CheckResult("reviews", "needs_review", message))
     else:
         results.append(CheckResult("reviews", "pass", "negative/follow-up/Q&A checks completed"))
 
@@ -625,11 +702,18 @@ def render_markdown(criteria: Dict[str, Any], evaluated: List[Dict[str, Any]]) -
     for index, item in enumerate(evaluated[:limit], start=1):
         candidate = item["candidate"]
         image = candidate.get("image_url") or candidate.get("screenshot_path")
+        source_url = candidate.get("source_url")
+        review_probe_url = candidate_explicit_review_probe_url(candidate)
+        link_lines = [f"- Purchase link: {candidate.get('url', 'unknown')}"]
+        if source_url and source_url != candidate.get("url"):
+            link_lines.append(f"- Source link: {source_url}")
+        if review_probe_url and review_probe_url not in {candidate.get("url"), source_url}:
+            link_lines.append(f"- Review probe link: {review_probe_url}")
         lines.extend(
             [
                 f"### {index}. {candidate.get('title', item['id'])}",
                 "",
-                f"- Purchase link: {candidate.get('url', 'unknown')}",
+                *link_lines,
                 "",
                 f"![Product image]({image})" if image else "_Product image not captured._",
                 "",
@@ -714,6 +798,20 @@ def render_html(criteria: Dict[str, Any], evaluated: List[Dict[str, Any]]) -> st
             f"<tbody>{''.join(rows)}</tbody></table>"
         )
 
+    def render_identity_links(candidate: Dict[str, Any], link_html: str) -> str:
+        links = [link_html]
+        seen = {str(candidate.get("url") or "")}
+        for label, value in (
+            ("来源链接", candidate.get("source_url")),
+            ("评价探针链接", candidate_explicit_review_probe_url(candidate)),
+        ):
+            text = str(value or "")
+            if not text or text in seen:
+                continue
+            seen.add(text)
+            links.append(f"<a class=\"secondary-link\" href=\"{esc(text)}\"{external_link_attrs()}>{label}</a>")
+        return "".join(links)
+
     def render_landscape_list(title: str, values: Any, key: str) -> str:
         items = compact_items(values, landscape_item_limit(criteria, key))
         if not items:
@@ -772,7 +870,7 @@ def render_html(criteria: Dict[str, Any], evaluated: List[Dict[str, Any]]) -> st
               <div class="content">
                 <div class="rank">#{index} <span class="badge {status_class(status)}">{html.escape(status_text(status))}</span></div>
                 <h2>{esc(candidate.get('title'), item.get('id', 'candidate'))}</h2>
-                <div class="identity-row">{link_html}</div>
+                <div class="identity-row">{render_identity_links(candidate, link_html)}</div>
                 <div class="meta">
                   <span>评分 {esc(item.get('score'))}</span>
                   <span>{esc(candidate.get('brand'))} / {esc(candidate.get('model'))}</span>
@@ -906,7 +1004,7 @@ def render_html(criteria: Dict[str, Any], evaluated: List[Dict[str, Any]]) -> st
     .needs_review {{ color: var(--amber); background: #fff2d7; }}
     .fail {{ color: var(--red); background: #f9e3e3; }}
     .meta {{ display: flex; flex-wrap: wrap; gap: 8px 16px; color: var(--muted); font-size: 14px; margin-bottom: 14px; }}
-    .identity-row {{ margin: 8px 0 12px; }}
+    .identity-row {{ display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0 12px; }}
     .purchase-link {{
       display: inline-flex;
       align-items: center;
@@ -917,6 +1015,16 @@ def render_html(criteria: Dict[str, Any], evaluated: List[Dict[str, Any]]) -> st
       font-weight: 700;
       text-decoration: none;
       background: #eef5fb;
+    }}
+    .secondary-link {{
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 7px 10px;
+      text-decoration: none;
+      background: #ffffff;
+      font-size: 14px;
     }}
     .metrics {{ display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 14px 0; }}
     .metrics div {{ border: 1px solid var(--line); border-radius: 8px; padding: 10px; }}
@@ -977,6 +1085,9 @@ def command_template(args: argparse.Namespace) -> int:
             "store_name": "",
             "store_type": "unknown",
             "url": "",
+            "canonical_url": "",
+            "source_url": "",
+            "review_probe_url": "",
             "image_url": "",
             "screenshot_path": "",
             "source_platform": "",

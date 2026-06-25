@@ -93,6 +93,9 @@
     "store_name": "格兰仕旗舰店",
     "store_type": "flagship",
     "url": "https://detail.tmall.com/item.htm?id=sample",
+    "canonical_url": "https://detail.tmall.com/item.htm?id=sample",
+    "source_url": "https://detail.tmall.com/item.htm?id=sample&spm=sample.search&utparam=%7B%22source%22%3A%22taobaoSearch%22%7D&xxc=taobaoSearch",
+    "review_probe_url": "https://detail.tmall.com/item.htm?id=sample&spm=sample.search&utparam=%7B%22source%22%3A%22taobaoSearch%22%7D&xxc=taobaoSearch",
     "purchase_platform_verified": true,
     "selected_sku": {
       "label": "23L 白色 900W 标准版",
@@ -144,6 +147,7 @@
     "store_name": "美的官方旗舰店",
     "store_type": "flagship",
     "url": "https://detail.tmall.com/item.htm?id=sample-needs-review",
+    "canonical_url": "https://detail.tmall.com/item.htm?id=sample-needs-review",
     "purchase_platform_verified": true,
     "purchase_note": "Sample Tmall listing with product evidence but missing review probe.",
     "selected_sku": {
